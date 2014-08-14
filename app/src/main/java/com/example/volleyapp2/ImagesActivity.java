@@ -16,7 +16,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ImagesActivity extends ActionBarActivity {
@@ -58,6 +63,7 @@ public class ImagesActivity extends ActionBarActivity {
     public static class ImagesFragment extends Fragment {
 
         private ImageRecordsAdapter mAdapter;
+        private List<ImageRecord> mImageRecords;
 
         public ImagesFragment() {
         }
@@ -72,7 +78,8 @@ public class ImagesActivity extends ActionBarActivity {
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            mAdapter = new ImageRecordsAdapter(getActivity());
+            mImageRecords = new ArrayList<ImageRecord>();
+            mAdapter = new ImageRecordsAdapter(getActivity(), mImageRecords);
 
             ListView listView = (ListView) getView().findViewById(R.id.list1);
             listView.setAdapter(mAdapter);
@@ -87,7 +94,13 @@ public class ImagesActivity extends ActionBarActivity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            // TODO Parse the response
+                            try {
+                                mImageRecords = parse(jsonObject);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                            catch(JSONException e) {
+                                Toast.makeText(getActivity(), "Unable to parse data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     },
                     new Response.ErrorListener() {
@@ -98,6 +111,23 @@ public class ImagesActivity extends ActionBarActivity {
                     });
 
             VolleyApplication.getInstance().getRequestQueue().add(request);
+        }
+
+        private List<ImageRecord> parse(JSONObject json) throws JSONException {
+            ArrayList<ImageRecord> records = new ArrayList<ImageRecord>();
+
+            JSONArray jsonImages = json.getJSONArray("images");
+
+            for(int i =0; i < jsonImages.length(); i++) {
+                JSONObject jsonImage = jsonImages.getJSONObject(i);
+                String title = jsonImage.getString("title");
+                String url = jsonImage.getString("url");
+
+                ImageRecord record = new ImageRecord(url, title);
+                records.add(record);
+            }
+
+            return records;
         }
     }
 }
