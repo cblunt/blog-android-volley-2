@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 public class ImagesActivity extends ActionBarActivity {
 
     @Override
@@ -19,7 +18,7 @@ public class ImagesActivity extends ActionBarActivity {
         setContentView(R.layout.activity_images);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ImagesFragment())
                     .commit();
         }
     }
@@ -47,15 +46,20 @@ public class ImagesActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class ImagesFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        private ImageRecordsAdapter mAdapter;
+
+        public ImagesFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_images, container, false);
+
+            mAdapter = new ImageRecordsAdapter(getActivity());
+
             return rootView;
         }
     }
