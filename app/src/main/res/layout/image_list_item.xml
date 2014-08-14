@@ -9,6 +9,7 @@
     <com.android.volley.toolbox.NetworkImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:scaleType="centerCrop"
         tools:src="@drawable/ic_launcher"
         android:id="@+id/image1"/>
 

@@ -63,7 +63,6 @@ public class ImagesActivity extends ActionBarActivity {
     public static class ImagesFragment extends Fragment {
 
         private ImageRecordsAdapter mAdapter;
-        private List<ImageRecord> mImageRecords;
 
         public ImagesFragment() {
         }
@@ -78,8 +77,7 @@ public class ImagesActivity extends ActionBarActivity {
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            mImageRecords = new ArrayList<ImageRecord>();
-            mAdapter = new ImageRecordsAdapter(getActivity(), mImageRecords);
+            mAdapter = new ImageRecordsAdapter(getActivity());
 
             ListView listView = (ListView) getView().findViewById(R.id.list1);
             listView.setAdapter(mAdapter);
@@ -95,8 +93,9 @@ public class ImagesActivity extends ActionBarActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             try {
-                                mImageRecords = parse(jsonObject);
-                                mAdapter.notifyDataSetChanged();
+                                List<ImageRecord> imageRecords = parse(jsonObject);
+
+                                mAdapter.swapImageRecords(imageRecords);
                             }
                             catch(JSONException e) {
                                 Toast.makeText(getActivity(), "Unable to parse data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
