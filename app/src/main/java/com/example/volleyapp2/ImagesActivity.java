@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,14 +87,13 @@ public class ImagesActivity extends AppCompatActivity {
         }
 
         private void fetch() {
-            JsonObjectRequest request = new JsonObjectRequest(
-                    "http://cblunt.github.io/blog-android-volley/response2.json",
-                    null,
-                    new Response.Listener<JSONObject>() {
+            JsonArrayRequest request = new JsonArrayRequest(
+                    "http://cblunt.github.io/blog-android-volley/response2-a.json",
+                    new Response.Listener<JSONArray>() {
                         @Override
-                        public void onResponse(JSONObject jsonObject) {
+                        public void onResponse(JSONArray jsonArray) {
                             try {
-                                List<ImageRecord> imageRecords = parse(jsonObject);
+                                List<ImageRecord> imageRecords = parse(jsonArray);
 
                                 mAdapter.swapImageRecords(imageRecords);
                             }
@@ -113,10 +112,8 @@ public class ImagesActivity extends AppCompatActivity {
             VolleyApplication.getInstance().getRequestQueue().add(request);
         }
 
-        private List<ImageRecord> parse(JSONObject json) throws JSONException {
+        private List<ImageRecord> parse(JSONArray jsonImages) throws JSONException {
             ArrayList<ImageRecord> records = new ArrayList<ImageRecord>();
-
-            JSONArray jsonImages = json.getJSONArray("images");
 
             for(int i =0; i < jsonImages.length(); i++) {
                 JSONObject jsonImage = jsonImages.getJSONObject(i);
