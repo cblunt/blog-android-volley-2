@@ -1,6 +1,7 @@
 package com.example.volleyapp2;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,10 @@ public class ImageRecordsAdapter extends ArrayAdapter<ImageRecord> {
         mImageLoader = new ImageLoader(VolleyApplication.getInstance().getRequestQueue(), new BitmapLruCache());
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.image_list_item, parent, false);
         }
 
@@ -33,8 +35,10 @@ public class ImageRecordsAdapter extends ArrayAdapter<ImageRecord> {
 
         ImageRecord imageRecord = getItem(position);
 
-        imageView.setImageUrl(imageRecord.getUrl(), mImageLoader);
-        textView.setText(imageRecord.getTitle());
+        if (imageRecord != null) {
+            imageView.setImageUrl(imageRecord.getUrl(), mImageLoader);
+            textView.setText(imageRecord.getTitle());
+        }
 
         return convertView;
     }
@@ -42,7 +46,7 @@ public class ImageRecordsAdapter extends ArrayAdapter<ImageRecord> {
     public void swapImageRecords(List<ImageRecord> objects) {
         clear();
 
-        for(ImageRecord object : objects) {
+        for (ImageRecord object : objects) {
             add(object);
         }
 

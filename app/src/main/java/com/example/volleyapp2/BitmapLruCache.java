@@ -22,7 +22,6 @@ public class BitmapLruCache extends LruCache<String, Bitmap>
         return value.getRowBytes() * value.getHeight();
     }
 
-
     @Override
     public Bitmap getBitmap(String url) {
         return get(url);
